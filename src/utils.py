@@ -1,10 +1,9 @@
+# src/utils.py
 import os
 import random
 import subprocess
 from typing import List
-
-# Constants for file paths
-from .config import QUOTES_FILE, HEADERS_FILE
+from src.config import QUOTES_FILE, HEADERS_FILE
 
 def load_items(file_path: str) -> List[str]:
     """
