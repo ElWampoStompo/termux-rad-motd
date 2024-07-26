@@ -1,4 +1,3 @@
-# src/utils.py
 import os
 import random
 import subprocess
@@ -40,21 +39,11 @@ def get_command_output(command: str) -> str:
     Returns:
         str: Output of the command.
     """
-    result = subprocess.run(command.split(), capture_output=True, text=True, check=True)
-    return result.stdout.strip()
-
-def get_file_content(file_path: str) -> str:
-    """
-    Return the content of a file as a single string.
-
-    Args:
-        file_path (str): Path to the file.
-
-    Returns:
-        str: Content of the file.
-    """
-    with open(file_path, 'r') as file:
-        return file.read().strip()
+    try:
+        result = subprocess.run(command.split(), capture_output=True, text=True, check=True)
+        return result.stdout.strip()
+    except FileNotFoundError:
+        return f"Command '{command}' not found."
 
 def get_device_info() -> str:
     """
