@@ -9,11 +9,11 @@ import sys
 import os
 from datetime import datetime
 
-# Add the src directory to the Python path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
+# Add the project root directory to the Python path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from utils import load_items, get_random_item, get_device_info, get_battery_status, get_storage_usage
-from config import QUOTES_FILE, HEADERS_FILE
+from src.utils import load_items, get_random_item, get_device_info, get_battery_status, get_storage_usage
+from src.config import QUOTES_FILE, HEADERS_FILE
 
 def print_motd() -> None:
     """
