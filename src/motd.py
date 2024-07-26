@@ -5,9 +5,15 @@ A script to print a custom Message of the Day (MOTD) in Termux.
 It includes the current date and time, a random quote, a random header, device information, and dynamic elements.
 """
 
+import sys
+import os
 from datetime import datetime
-from src.utils import load_items, get_random_item, get_device_info, get_battery_status, get_storage_usage
-from src.config import QUOTES_FILE, HEADERS_FILE
+
+# Add the src directory to the Python path
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+from utils import load_items, get_random_item, get_device_info, get_battery_status, get_storage_usage
+from config import QUOTES_FILE, HEADERS_FILE
 
 def print_motd() -> None:
     """
