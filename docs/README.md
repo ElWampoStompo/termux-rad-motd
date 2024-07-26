@@ -14,6 +14,9 @@ A script to print a custom Message of the Day (MOTD) in Termux. It includes the 
 ├── .github
 │   └── workflows
 │       └── ci.yml
+├── data
+│   ├── quotes.txt
+│   └── headers.txt
 ├── docs
 │   └── README.md
 ├── src
@@ -56,6 +59,7 @@ Run the script:
 ```sh
 python src/motd.py
 ```
+
 # Configuration
 
 You can customize the MOTD by editing the config.py file in the src directory. This file contains various settings such as the format of the date and time, the source of random quotes, and more.
