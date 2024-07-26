@@ -1,6 +1,35 @@
 import unittest
 from unittest.mock import mock_open, patch
-from src.utils import load_items, get_random_item, get_random_quote, get_header, get_device_info, get_battery_status, get_storage_usage
+from src.utils import (
+    load_items, get_random_item, get_random_quote, get_header,
+    get_device_info, get_battery_status, get_storage_usage
+)
+
+# Helper functions
+def _mock_open(data):
+    """
+    Helper function to mock file opening.
+
+    Args:
+        data (str): Data to be returned by the mock file.
+
+    Returns:
+        mock_open: Mocked open function.
+    """
+    return mock_open(read_data=data)
+
+def _patch_subprocess(mock_run, output):
+    """
+    Helper function to patch subprocess.run.
+
+    Args:
+        mock_run (Mock): Mock object for subprocess.run.
+        output (str): Output to be returned by the mock subprocess.
+
+    Returns:
+        Mock: Patched subprocess.run.
+    """
+    mock_run.return_value.stdout = output
 
 class TestMOTD(unittest.TestCase):
     """
@@ -16,31 +45,7 @@ class TestMOTD(unittest.TestCase):
         self.quote_data = '"Success is not final, failure is not fatal: It is the courage to continue that counts." - Winston Churchill\n'
         self.mock_command_output = 'Mocked Output'
 
-    def _mock_open(self, data):
-        """
-        Helper function to mock file opening.
-
-        Args:
-            data (str): Data to be returned by the mock file.
-
-        Returns:
-            mock_open: Mocked open function.
-        """
-        return mock_open(read_data=data)
-
-    def _patch_subprocess(self, mock_run):
-        """
-        Helper function to patch subprocess.run.
-
-        Args:
-            mock_run (Mock): Mock object for subprocess.run.
-
-        Returns:
-            Mock: Patched subprocess.run.
-        """
-        mock_run.return_value.stdout = self.mock_command_output
-
-    @patch('builtins.open', new_callable=_mock_open, data='item1\nitem2\nitem3\n')
+    @patch('builtins.open', new_callable=lambda: _mock_open('item1\nitem2\nitem3\n'))
     def test_load_items(self, mock_file):
         """
         Test loading items from a file.
@@ -61,7 +66,7 @@ class TestMOTD(unittest.TestCase):
         random_item = get_random_item(items)
         self.assertIn(random_item, items)
 
-    @patch('builtins.open', new_callable=_mock_open, data='Welcome to Termux!\nYour daily dose of motivation:\n')
+    @patch('builtins.open', new_callable=lambda: _mock_open('Welcome to Termux!\nYour daily dose of motivation:\n'))
     def test_get_header(self, mock_file):
         """
         Test getting the header from the headers file.
@@ -71,7 +76,7 @@ class TestMOTD(unittest.TestCase):
         header = get_header()
         self.assertEqual(header, 'Welcome to Termux!')
 
-    @patch('builtins.open', new_callable=_mock_open, data='"Success is not final, failure is not fatal: It is the courage to continue that counts." - Winston Churchill\n')
+    @patch('builtins.open', new_callable=lambda: _mock_open('"Success is not final, failure is not fatal: It is the courage to continue that counts." - Winston Churchill\n'))
     def test_get_random_quote(self, mock_file):
         """
         Test getting a random quote from the quotes file.
@@ -88,7 +93,7 @@ class TestMOTD(unittest.TestCase):
 
         TODO: Add test cases for different command outputs.
         """
-        self._patch_subprocess(mock_run)
+        _patch_subprocess(mock_run, self.mock_command_output)
         device_info = get_device_info()
         self.assertIn('Mocked Output', device_info)
 
@@ -99,7 +104,7 @@ class TestMOTD(unittest.TestCase):
 
         TODO: Add test cases for different battery statuses.
         """
-        self._patch_subprocess(mock_run)
+        _patch_subprocess(mock_run, self.mock_command_output)
         battery_status = get_battery_status()
         self.assertIn('Mocked Output', battery_status)
 
@@ -110,7 +115,7 @@ class TestMOTD(unittest.TestCase):
 
         TODO: Add test cases for different storage usage outputs.
         """
-        self._patch_subprocess(mock_run)
+        _patch_subprocess(mock_run, self.mock_command_output)
         storage_usage = get_storage_usage()
         self.assertIn('Mocked Output', storage_usage)
 
